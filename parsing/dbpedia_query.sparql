@@ -1,0 +1,27 @@
+prefix db: <http://dbpedia.org/ontology/>
+prefix dc: <http://purl.org/dc/terms/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix category: <http://dbpedia.org/resource/Category:>
+ 
+select distinct ?member, ?mpName, ?mpPartyLabel, ?mpComment, ?foafDepiction, ?thumb, ?homepage, (group_concat(distinct ?catLabel; separator=", ") as ?categories) where {
+    {
+        ?member dc:subject <http://dbpedia.org/resource/Category:MPs_of_the_United_Kingdom_House_of_Commons,_by_Parliament> .
+    } union {
+        ?member dc:subject [skos:broader <http://dbpedia.org/resource/Category:MPs_of_the_United_Kingdom_House_of_Commons,_by_Parliament>] .
+    }
+ 
+    ?member a db:Person .
+    ?member dbpprop:name ?mpName .
+    ?member dbpprop:party ?mpParty .
+    ?member dc:subject ?cat .
+    optional {?member rdfs:comment ?mpComment .}
+    optional {?member foaf:depiction ?foafDepiction .}
+    optional {?member dbpedia-owl:thumbnail ?thumb .}
+    optional {?member foaf:homepage ?homepage .}
+    optional {?mpParty rdfs:label ?mpPartyLabel .}
+    FILTER(LANG(?mpName) = "" || LANGMATCHES(LANG(?mpName), "en"))
+    FILTER(LANG(?mpPartyLabel) = "" || LANGMATCHES(LANG(?mpPartyLabel), "en"))
+    FILTER(LANG(?mpComment) = "" || LANGMATCHES(LANG(?mpComment), "en"))
+    ?cat skos:broader <http://dbpedia.org/resource/Category:MPs_of_the_United_Kingdom_House_of_Commons,_by_Parliament> .
+    ?cat rdfs:label ?catLabel
+}

@@ -1,0 +1,15 @@
+{
+  "name": "mpdb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ændrew Rininsland <aendrew.rininsland@thetimes.co.uk> (http://www.aendrew.com/)",
+  "license": "ISC",
+  "dependencies": {
+    "mongojs": "^0.18.2",
+    "restify": "^3.0.2"
+  }
+}
