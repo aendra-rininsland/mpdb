@@ -11,7 +11,39 @@ if (process.env.NODE_ENV === 'prod') {
 
  
 // Server
-var server = restify.createServer();
+var server = restify.createServer({
+  formatters: {
+    'application/json': function customizedFormatJSON( req, res, body ) {
+        // Copied from restify/lib/formatters/json.js
+
+        if ( body instanceof Error ) {
+            // snoop for RestError or HttpError, but don't rely on
+            // instanceof
+            res.statusCode = body.statusCode || 500;
+
+            if ( body.body ) {
+                body = {
+                    code: 10001,
+                    scode: body.body.code,
+                    msg: body.body.message
+                };
+            } else {
+                body = {
+                    code: 10001,
+                    msg: body.message
+                };
+            }
+        } else if ( Buffer.isBuffer( body ) ) {
+            body = body.toString( 'base64' );
+        }
+
+        var data = JSON.stringify( body );
+        res.setHeader( 'Content-Length', Buffer.byteLength( data ) );
+
+        return data;
+    }
+  }
+});
  
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
