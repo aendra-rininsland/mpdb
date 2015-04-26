@@ -1,5 +1,6 @@
 var restify = require('restify');
 var mongojs = require('mongojs');
+var ObjectId = mongojs.ObjectId;
 
 var db;
 
@@ -73,8 +74,8 @@ server.get('/api/v1/mps', function (req, res, next) {
 server.get('/api/v1/mps/id/:id', function (req, res, next) {
   var id = req.params.id;
   
-  db.members.find({
-    '_id': id
+  db.members.findOne({
+    '_id': ObjectId(id)
   }, function(err, data){
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8'
