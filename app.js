@@ -55,9 +55,14 @@ server.listen(process.env.PORT || 3000, function () {
 });
 
 // Get party profile
-server.get('/api/v1/mps', function (req, res, next) {
+server.get('/api/v1/mps/:name', function (req, res, next) {
+  var name = req.params.name;
   var params = req.query;
   var query = params.filters ? params.filters : {};
+  
+  if (name) {
+    query.name = new RegExp(name, 'gi');
+  }
   
   db.members.find(query, function(err, data){
     res.writeHead(200, {
