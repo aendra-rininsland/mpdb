@@ -79,7 +79,7 @@ server.get('/api/v1/mps/id/:id', function (req, res, next) {
   var id = req.params.id;
   
   db.members.find({
-    '_id': id
+    '_id': mongojs.ObjectId(id)
   }, function(err, data){
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8'
